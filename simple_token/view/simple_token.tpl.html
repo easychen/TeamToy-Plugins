@@ -1,0 +1,117 @@
+<style type="text/css">
+h3.token
+{
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+	padding-top:0px;
+}
+</style>
+
+<?php if( strlen($tinfo['token']) < 5 ): ?>
+<!-- 从未创建过token -->
+
+<div class="alert ">
+<div class="row-fluid">	
+<div class="span10"><p>SimpleToken是一个永不过期的Token，通过它你可以直接用URL访问TeamToy数据。</p>
+<p>为保证安全，请在不使用时关闭此功能。</p></div>
+<div class="span2"><a href="javascript:stoken_create();void(0);" class="btn btn-primary">启用Token</a></div>
+</div>
+</div>
+
+
+<?php elseif( intval( $tinfo['on'] ) != '1' ): ?>
+<!-- 创建过token，但关闭了 -->
+<div class="alert alert-error">
+<div class="row-fluid">	
+<div class="span10"><h3 class="token">Token <?=$tinfo['token']?> (已停用)</h3></div>
+<div class="span2"><a href="javascript:stoken_reopen();void(0);" class="btn btn-primary">启用Token</a></div>
+</div>
+
+</div>
+<?php else: ?>
+<!-- 创建了token，并正在使用 -->
+<div class="alert alert-info">
+<div class="row-fluid">	
+<div class="span8"><h3 class="token">Token <?=$tinfo['token']?></h3></div>
+<div class="span2"><a href="javascript:stoken_update();void(0);" class="btn btn-danger">重置Token</a></div>
+<div class="span2"><a href="javascript:stoken_close();void(0);" class="btn btn-warning">停用Token</a></div>
+</div>
+</div>
+
+<div class="row-fluid">	
+<div class="span4">
+<a href="?c=api&a=todo_list&stoken=<?=$tinfo['token']?>" target="new">获取我的TODO List</a><br/>
+<a href="?c=api&a=user_unread&stoken=<?=$tinfo['token']?>" target="new">获取我的未读消息</a>
+</div>	
+<div class="span4">
+<a href="?c=api&a=team_members&stoken=<?=$tinfo['token']?>" target="new">获取成员联系信息</a><br/>
+<a href="?c=api&a=feed_list&stoken=<?=$tinfo['token']?>" target="new">获取最新团队动态</a>
+</div>	
+<div class="span4"><a href="<?=c('teamtoy_url')?>/apidoc.html" target="_blank">查看更多API</a><br/>↑将文档中的'token'变量改为'stoken'即可
+
+</div>	
+
+
+
+
+</div>
+
+<?php endif; ?>
+<script type="text/javascript">
+function stoken_create(update)
+{
+	var url = '?c=plugin&a=simple_token&do=create';
+	$.post( url , {} , function( data )
+	{
+		if( data == 'done' )
+		{
+			/*if( update )
+				alert( 'Token已经重置' );
+			else	
+				alert( 'Token创建成功' );
+			*/
+			show_float_box( 'SimpleToken' , '?c=plugin&a=simple_token');
+		}
+		else
+			alert( '创建失败，请稍后再试' );
+	} );
+}
+
+function stoken_update()
+{
+	if( confirm( '确定要重置Token么？之前使用了接口的程序可能因此失效。' ) )
+		return stoken_create(1);
+	
+}
+
+function stoken_close()
+{
+	var url = '?c=plugin&a=simple_token&do=close';
+	$.post( url , {} , function( data )
+	{
+		if( data == 'done' )
+		{
+			//alert( 'Token已停用' );
+			show_float_box( 'SimpleToken' ,'?c=plugin&a=simple_token');
+		}
+		else
+			alert( '创建失败，请稍后再试' );
+	} );
+}
+
+function stoken_reopen()
+{
+	var url = '?c=plugin&a=simple_token&do=reopen';
+	$.post( url , {} , function( data )
+	{
+		if( data == 'done' )
+		{
+			//alert( 'Token已启用' );
+			show_float_box( 'SimpleToken' ,'?c=plugin&a=simple_token');
+		}
+		else
+			alert( '创建失败，请稍后再试' );
+	} );
+}
+</script>

@@ -1,0 +1,9 @@
+<form class="form row-fluid" action="?c=plugin&a=mycss_save" method="post">
+<h2 class="main_board">自定义样式</h2> 
+<div class="line"></div>
+<textarea class="span8" rows="15" id="mycss" name="css" placeholder="body { background: white; }"><?=htmlspecialchars($css)?></textarea>
+<p><button type="submit" class="btn">更新</button></p>
+</form>
+<script>
+tabIndent.render(document.getElementById('mycss'));
+</script>

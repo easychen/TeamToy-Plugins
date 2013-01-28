@@ -1,0 +1,7 @@
+<?php
+print_r( $uids );
+ if( isset($uids) && is_array($uids) ): ?>
+	<?php foreach( $uids as $uiditem ): ?>
+		<div id="todo_flow_<?=$uiditem['id']?>" uid="<?=$uiditem['id']?>"></div>
+	<?php endforeach; ?>
+<?php endif; ?>	
