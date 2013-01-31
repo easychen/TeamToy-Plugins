@@ -1,0 +1,38 @@
+<div class="row-fluid">	
+<form class="form-horizontal" action="?c=plugin&a=mail_queue_save" method="post" id="mqueue_form">
+	<div class="control-group">
+		<label class="control-label" for="mqueue_server">SMTP服务器</label>
+		<div class="controls">
+			<input type="text" class="input" id="mqueue_server" name="mqueue_server" value="<?=$mqueue_server?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="mqueue_port">端口</label>
+		<div class="controls">
+			<input type="text" class="input" id="mqueue_port" name="mqueue_port" value="<?=$mqueue_port?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="mqueue_username">用户名</label>
+		<div class="controls">
+			<input type="text" class="input" id="mqueue_username" name="mqueue_username" value="<?=$mqueue_username?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="mqueue_password">密码</label>
+		<div class="controls">
+			<input type="password" class="input" id="mqueue_password" name="mqueue_password" value="<?=$mqueue_password?>">
+		</div>
+	</div>
+	
+	
+	
+	<div class="form-actions">
+            <a type="button" class="btn btn-primary" href="javascript:send_form_in('mqueue_form');">保存</a>
+
+</form>
+
+</div>	
