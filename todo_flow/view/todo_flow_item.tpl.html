@@ -2,7 +2,7 @@
 <?php if( $err_code == 0  ): ?>
 <ul class="todo_flow">
 	<?php foreach( $data as $item ): ?>
-	<li  class=" <?php if( $item['is_star'] == 1 ){ echo 'star'; } ?> <?php if( $item['status'] == 3 ){ echo 'done'; } ?> " title="最后活动时间 - <?=$item['last_action_at']?>" ><input type="checkbox" <?php if( $item['status'] == 3 ){ echo 'checked'; } ?> />&nbsp;<?php if( $item['is_star'] == 1 ){ echo '★'; } ?><?=$item['content']?></li>
+	<li  class=" <?php if( $item['is_star'] == 1 ){ echo 'star'; } ?> <?php if( $item['status'] == 3 ){ echo 'done'; } ?> " title="最后活动时间 - <?=$item['last_action_at']?>" ><input type="checkbox" <?php if( $item['status'] == 3 ){ echo 'checked'; } ?> />&nbsp;<a href="javascript:go_follow(<?=$item['tid']?>);void(0);"><?php if( $item['is_star'] == 1 ){ echo '★'; } ?><?=$item['content']?></a></li>
 	<?php endforeach; ?>
 </ul>
 <?php else: ?>

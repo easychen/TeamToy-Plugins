@@ -49,6 +49,7 @@ add_action( 'PLUGIN_MAIL_QUEUE' , 'plugin_mail_queue');
 function  plugin_mail_queue()
 {
 
+	$data['mqueue_on'] = kget('mqueue_on');
 	$data['mqueue_server'] = kget('mqueue_server');
 	$data['mqueue_port'] = kget('mqueue_port');
 	$data['mqueue_username'] = kget('mqueue_username');
@@ -59,6 +60,7 @@ function  plugin_mail_queue()
 add_action( 'PLUGIN_MAIL_QUEUE_SAVE' , 'plugin_mail_queue_save');
 function  plugin_mail_queue_save()
 {
+	$mqueue_on = intval(t(v('mqueue_on')));
 	$mqueue_server = z(t(v('mqueue_server')));
 	$mqueue_port = z(t(v('mqueue_port')));
 	$mqueue_username = z(t(v('mqueue_username')));
@@ -71,6 +73,7 @@ function  plugin_mail_queue_save()
 
 	) return ajax_echo('设置内容不能为空');
 
+	kset('mqueue_on' , $mqueue_on);	
 	kset('mqueue_server' , $mqueue_server);	
 	kset('mqueue_port' , $mqueue_port);	
 	kset('mqueue_username' , $mqueue_username);	
@@ -96,6 +99,7 @@ function  mail_queue_css()
 add_action( 'UI_INBOX_SCRIPT_LAST' , 'mail_queue_js' );
 function mail_queue_js()
 {
+	if( intval(kget('mqueue_on')) != 1 ) return false;
 	?>
 	function mail_settings_toggle()
 	{
@@ -134,6 +138,7 @@ function mail_queue_js()
 add_action( 'UI_COMMON_SCRIPT' , 'check_mail_script' );
 function check_mail_script()
 {
+	if( intval(kget('mqueue_on')) != 1 ) return false;
 	?>
 	var sending_mail = false;
 	var mail_noty = null ;
@@ -184,9 +189,11 @@ function check_mail_script()
 add_action( 'PLUGIN_CHECK_MAIL' , 'plugin_check_mail' );
 function plugin_check_mail()
 {
+	if( intval(kget('mqueue_on')) != 1 ) return false;
 	$sql = "SELECT * FROM `mail_queue` WHERE `timeline` > '" . date("Y-m-d H:i:s" , strtotime( "-1 hour" ) ) . "' LIMIT 1";
 	if( $line = get_line( $sql ) )
 	{
+		session_write_close();
 		$info = unserialize( $line['data'] );
 		if(phpmailer_send_mail( $info['to'] , $info['subject'] , $info['body'] 
 			, kget('mqueue_username') , kget('mqueue_server') , kget('mqueue_port') 
@@ -211,6 +218,7 @@ function plugin_check_mail()
 add_action( 'SEND_NOTICE_AFTER' , 'send_notice_mail' );
 function send_notice_mail( $data )
 {
+	if( intval(kget('mqueue_on')) != 1 ) return false;
 	if( intval(kget('mqueue_usettings_'.$data['uid'])) == 1  )
 	{
 		// 未设置，或者设置为接受
@@ -246,7 +254,7 @@ function plugin_mset()
 add_action( 'UI_INBOX_SETTINGS_LAST' , 'mail_queue_inbox_icon');
 function mail_queue_inbox_icon()
 {
-	if( kget('mqueue_server') )
+	if( intval(kget('mqueue_on')) == 1 )
 	{
 		if( intval(kget('mqueue_usettings_'.uid())) == 1 )
 		{

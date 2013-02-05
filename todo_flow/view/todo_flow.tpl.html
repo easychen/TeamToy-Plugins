@@ -24,12 +24,18 @@ ul.todo_flow li:last-child,ul.todo_flow.nodata li
 	border:0px;
 }
 
-ul.todo_flow li.star
+ul.todo_flow li a
+{
+	color:#666;
+}
+
+
+ul.todo_flow li.star a
 {
 	color: #0194C4;
 }
 
-ul.todo_flow li.done
+ul.todo_flow li.done a
 {
 	text-decoration: line-through;
 	color:#aaa;
@@ -71,6 +77,13 @@ ul.todo_flow li.done
     			duration: 400
   			}
   		});
+	}
+
+	function go_follow( tid )
+	{
+		if( confirm( '关注此TODO后可在TODO页面【我关注的TODO】分类查看。继续？' ) )
+		return todo_follow( tid );
+
 	}
 
 	function load_todo_flow()
