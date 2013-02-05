@@ -47,6 +47,12 @@ function todo_flow_item()
 	{
 			$data = json_decode($content , 1);
 			$data['user'] = get_user_info_by_id( $uid );
+
+			if( isset($data['data']) )
+			foreach( $data['data'] as $k => $v )
+			{
+				if( $v['is_follow'] == 1 ) unset( $data['data'][$k] );
+			}
 			return render( $data , 'ajax' , 'plugin' , 'todo_flow' );
 	}
 }
