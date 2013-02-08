@@ -16,11 +16,11 @@ if( !mysql_query("SHOW COLUMNS FROM `css`",db()) )
 {
 	// table not exists
 	// create it
-	run_sql("CREATE TABLE  `css` (
-			`uid` INT NOT NULL ,
-			`css` TEXT NOT NULL ,
-			PRIMARY KEY (  `uid` )
-			) ENGINE = MYISAM ");
+	run_sql("CREATE TABLE IF NOT EXISTS `css` (
+  `uid` int(11) NOT NULL,
+  `css` text NOT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
 
 }
 

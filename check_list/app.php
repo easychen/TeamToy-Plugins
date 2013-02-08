@@ -14,17 +14,19 @@ TeamToy extenstion info block
 if( !mysql_query("SHOW COLUMNS FROM `checklist`",db()) )
 {
 
-	$sql = "CREATE TABLE  `checklist` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-	`tid` INT NOT NULL ,
-	`title` VARCHAR( 64 ) NOT NULL ,
-	`content` VARCHAR( 255 ) NOT NULL ,
-	`timeline` DATETIME NOT NULL ,
-	`uid` INT NOT NULL ,
-	`is_done` TINYINT( 1 ) NOT NULL DEFAULT  '0',
-	`sub_tid` INT NOT NULL ,
-	`order` INT NOT NULL ,
-	INDEX (  `tid` ) )";
+	$sql = "CREATE TABLE IF NOT EXISTS `checklist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tid` int(11) NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `timeline` datetime NOT NULL,
+  `uid` int(11) NOT NULL,
+  `is_done` tinyint(1) NOT NULL DEFAULT '0',
+  `sub_tid` int(11) NOT NULL,
+  `order` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tid` (`tid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
 	run_sql( $sql );
 }

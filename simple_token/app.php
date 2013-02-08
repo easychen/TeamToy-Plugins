@@ -18,13 +18,12 @@ if( !mysql_query("SHOW COLUMNS FROM `stoken`",db()) )
 {
 	// table not exists
 	// create it
-	run_sql("CREATE TABLE `stoken` 
-	(
-		`uid` INT NOT NULL ,
-		`token` VARCHAR( 32 ) NOT NULL ,
-		`on` TINYINT( 1 ) NOT NULL DEFAULT  '1',
-		PRIMARY KEY (  `uid` )
-	) 	ENGINE = MYISAM ");
+	run_sql("CREATE TABLE IF NOT EXISTS `stoken` (
+  `uid` int(11) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `on` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 }
 
