@@ -1,7 +1,7 @@
 <style type="text/css">
 #checklist_container
 {
-
+	margin-bottom: 3px;
 }
 
 #checklist_list
@@ -9,6 +9,12 @@
 	margin: 0px;
 	padding:10px;
 	background-color:#FAFAFA;
+}
+
+
+#checklist_list.edit
+{
+	background-color:#EEE; 
 }
 
 #checklist_list.empty
@@ -30,6 +36,12 @@
 	text-decoration: line-through;
 }
 
+
+a.side_link.edit i
+{
+	color:#cc3333!important;
+}
+
 #checklist_list li .close
 {
 	display: none;
@@ -47,14 +59,36 @@
 	text-decoration: none;
 }
 
+#checklist_list li .ing
+{
+	display: none;
+	position: absolute;
+	right:-15px;
+	color:#aaa;
+	cursor: pointer;
+	text-decoration: none;
+}
+
 #checklist_list li:hover
 {
 	background-color:white;  
 }
 
-#checklist_list li:hover .close,#checklist_list li:hover .move
+#checklist_list.edit li:hover .close,#checklist_list.edit li:hover .move,#checklist_list li:hover .ing
 {
 	display: inline-block;
+}
+
+
+#checklist_list li.doing,#checklist_list li.doing a
+{
+	color:#cc3333;
+}
+
+#checklist_list li.doing label:after
+{
+	content:"\00a0\00a0\00a0\00a0\00a0\00a0";
+	background:url(plugin/check_list/checklist.doing.gif) 3px 3px no-repeat;
 }
 
 #check_list_add_link
@@ -197,6 +231,24 @@ function bind_checklist()
 		}
 	});
 
+	$('#checklist_list a.ing').unbind('click');
+	$('#checklist_list a.ing').bind('click',function()
+	{
+		var ckid = $(this).attr('ckid');
+		if( parseInt($.cookie( 'ckitem-'+ckid )) == 1 )
+		{
+			$.cookie( 'ckitem-'+ckid , 0 );
+			$('#checklist_list li[ckid='+ckid+']').removeClass('doing');
+		}
+		else
+		{
+			$.cookie( 'ckitem-'+ckid , 1 );
+			$('#checklist_list li[ckid='+ckid+']').addClass('doing');
+		}
+	});
+
+
+
 	$('#checklist_list input[type=checkbox]').unbind('change');
 	$('#checklist_list input[type=checkbox]').bind('change',function()
 	{
@@ -234,13 +286,54 @@ function bind_checklist()
 			});
 			doing();
 	});
+
+	$('#checklist_list li').each(function()
+	{
+		if( parseInt($.cookie('ckitem-'+$(this).attr('ckid'))) == 1 ) $(this).addClass('doing');
+	});
 }
 
+function ck_edit_toggle()
+{
+	if( $('#ck_edit_icon').hasClass('edit') )
+	{
+		$('#ck_edit_icon').removeClass('edit');
+		$('#checklist_list').removeClass('edit');
+	}
+	else
+	{
+		$('#ck_edit_icon').addClass('edit');
+		$('#checklist_list').addClass('edit');
+		cklist_sortable();
+	}
+}
+
+function cklist_sortable()
+{
+	$('#checklist_list').sortable
+	({
+		group:'cklist',
+	  	handle: 'a.move',
+	  	itemSelector:'li',
+	  	onDrop:function( item, targetContainer, _super )
+	  	{
+	  		var neword = [];
+	  		$('#checklist_list li').each(function()
+	  		{
+	  			neword.unshift( $(this).attr('ckid') );
+	  		});
+	  		if( neword.length > 1 )
+	  			checklist_reorder( parseInt($('#checklist_list').attr('tid')) , neword.join('|') );
+
+	  		_super(item);  		
+	  	}
+	});
+}
 
 
 </script>
 <div class="line"></div>
-<h2 class="side_board">CheckList <span id="check_count"></span></h2>
+<h2 class="side_board">CheckList <span id="check_count"></span> <a class="side_link" title="编辑CheckList" id="ck_edit_icon" href="javascript:ck_edit_toggle();"><i class="icon-edit"></i></a> </h2>
 <?php if( isset( $checklists ) && is_array( $checklists )  ): ?>
 <div id="checklist_container">
 <ul id="checklist_list" class="cklist" tid="<?=$data['tid']?>">
@@ -249,26 +342,8 @@ function bind_checklist()
 <?php endforeach;?>
 </ul>
 </div>
+<a class="edit_show" href="javascript:check_list_add();void(0);" id="check_list_add_link">追加检查项</a>
 <script type="text/javascript">
-$('#checklist_list').sortable
-({
-	group:'cklist',
-  	handle: 'a.move',
-  	itemSelector:'li',
-  	onDrop:function( item, targetContainer, _super )
-  	{
-  		var neword = [];
-  		$('#checklist_list li').each(function()
-  		{
-  			neword.unshift( $(this).attr('ckid') );
-  		});
-  		if( neword.length > 1 )
-  			checklist_reorder( parseInt($('#checklist_list').attr('tid')) , neword.join('|') );
-
-  		_super(item);  		
-  	}
-});
-
 bind_checklist();
 count_checklist();
 
@@ -277,11 +352,9 @@ count_checklist();
 </script>
 <?php else: ?>
 	<ul id="checklist_list" class="empty cklist" tid="<?=$data['tid']?>"></ul>
+	<a class="edit_show" href="javascript:check_list_add();void(0);" id="check_list_add_link">追加检查项</a>
 <?php endif; ?>	
 
-<div id="check_list_add_link">
-	<a href="javascript:check_list_add();void(0);">追加检查项</a>
-</div>
 
 <div id="check_list_add_box" class="hide">
 <form class="form-inline" action="javascript:check_list_save( <?=$data['tid']?> , $('#checklist_text').val() );void(0);" method="post" id="checklist_form">

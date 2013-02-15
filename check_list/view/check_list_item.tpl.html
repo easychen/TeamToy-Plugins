@@ -1,4 +1,5 @@
 <li ckid="<?=$item['id']?>" <?=intval($item['is_done'])==1?' class="checked" ':''?>>
 	<a class="move"><i class="icon-move"></i></a>
 	<a class="close" ckid="<?=$item['id']?>">&times;</a>
+	<a class="ing" ckid="<?=$item['id']?>"><i class="icon-caret-right"></i></a>
 	<label class="checkbox"><input ckid="<?=$item['id']?>" type="checkbox" <?=intval($item['is_done'])==1?' checked ':''?>><?=t($item['title'])?></label></li>
