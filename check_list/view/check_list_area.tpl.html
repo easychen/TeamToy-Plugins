@@ -274,6 +274,8 @@ function bind_checklist()
 				{
 					if( action == 'done' )
 					{
+						$('#checklist_list li[ckid='+ckid+']').removeClass('doing');
+						$.cookie( 'ckitem-'+ckid , 0 );
 						$('#checklist_list li[ckid='+ ckid +']').addClass('checked');
 						if( $('#checklist_list li').length == $('#checklist_list li.checked').length )
 						{
