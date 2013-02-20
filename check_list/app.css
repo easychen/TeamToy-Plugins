@@ -1,0 +1,170 @@
+#checklist_container
+{
+	margin-bottom: 3px;
+}
+
+#checklist_list
+{
+	margin: 0px;
+	padding:10px;
+	background-color:#FAFAFA;
+}
+
+
+#checklist_list.edit
+{
+	background-color:#EEE; 
+}
+
+#checklist_list.empty
+{
+	padding:0px;
+	background-color:transparent;
+}
+
+#checklist_list li
+{
+	display: block;
+	list-style-image: disc;
+	position: relative;
+}
+
+#checklist_list li.checked
+{
+	color:#aaa;
+	text-decoration: line-through;
+}
+
+
+a.side_link.edit i
+{
+	color:#cc3333!important;
+}
+
+#checklist_list li .close
+{
+	display: none;
+	position: absolute;
+	right:5px;
+}
+
+#checklist_list li .move
+{
+	display: none;
+	position: absolute;
+	left:-28px;
+	color:#aaa;
+	cursor: move;
+	text-decoration: none;
+	width:30px;
+}
+
+#checklist_list li .ing
+{
+	display: none;
+	position: absolute;
+	left:-28px;
+	color:#aaa;
+	cursor: pointer;
+	text-decoration: none;
+	width:30px;
+}
+
+#checklist_list.edit li .ing,#checklist_list.edit li:hover .ing
+{
+	display: none;
+}
+
+#checklist_list li:hover
+{
+	background-color:white;  
+}
+
+#checklist_list.edit li:hover .close,#checklist_list.edit li:hover .move,#checklist_list li:hover .ing
+{
+	display: inline-block;
+}
+
+
+#checklist_list li.doing,#checklist_list li.doing a
+{
+	color:#cc3333;
+}
+
+#checklist_list li.doing label:after
+{
+	content:"\00a0\00a0\00a0\00a0\00a0\00a0";
+	background:url(checklist.doing.gif) 3px 3px no-repeat;
+}
+
+#check_list_add_link
+{
+	margin-top: 5px;
+}
+
+#check_list_add_box
+{
+	margin-top: 10px;
+}
+
+
+.dragged {
+  position: absolute;
+  opacity: 0;
+  z-index: 2000;
+}
+
+#checklist_list li.placeholder 
+{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none; 
+}
+   
+#checklist_list li.placeholder:before 
+{
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      margin-top: -5px;
+      left: -5px;
+      top: -4px;
+      border: 5px solid transparent;
+      border-left-color: #cc3333;
+      border-right: none; 
+}
+
+.border
+{
+	border:1px solid #ccc;
+	padding:5px;
+}
+
+.tplbox
+{
+	height: 200px;
+	overflow-y:scroll; 
+}
+
+#ckltpl_update_btn
+{
+	display: none;
+}
+
+select.tplbox
+{
+	width:168px!important;
+	height:200px!important;
+	margin-bottom:3px;
+	outline-width: 0px;
+}
+
+textarea.tplbox
+{
+	height:188px!important;
+	margin-bottom:3px;
+	width:340px!important;
+	outline-width: 0px;
+}

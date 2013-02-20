@@ -31,6 +31,17 @@ function  plugin_basic_auth()
 	return render( $data , 'ajax' , 'plugin' , 'basic_auth' ); 
 }
 
+if( intval(kget('bauth_on')) == 1 )
+	add_filter( 'UPLOAD_CURL_SETTINGS' , 'plugin_basic_curl' );
+
+function plugin_basic_curl( $ch )
+{
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); 
+	curl_setopt($ch, CURLOPT_USERPWD, kget('bauth_username').":".kget('bauth_password')); 	
+	
+	return $ch;
+}
+
 add_action( 'PLUGIN_BASIC_AUTH_SAVE' , 'plugin_basic_auth_save');
 function  plugin_basic_auth_save()
 {

@@ -11,7 +11,7 @@ TeamToy extenstion info block
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=check_list 
 ***/
 
-if( !mysql_query("SHOW COLUMNS FROM `checklist`",db()) )
+if( !mysql_query("SHOW COLUMNS FROM `checklist_tpl`",db()) )
 {
 
 	$sql = "CREATE TABLE IF NOT EXISTS `checklist` (
@@ -29,7 +29,20 @@ if( !mysql_query("SHOW COLUMNS FROM `checklist`",db()) )
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
 	run_sql( $sql );
+
+	$sql = "CREATE TABLE IF NOT EXISTS  `checklist_tpl` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`title` VARCHAR( 255 ) NOT NULL ,
+`content` TEXT NOT NULL ,
+`uid` INT NOT NULL DEFAULT  '0',
+`version` INT NOT NULL DEFAULT  '1',
+INDEX (  `uid` )
+) ENGINE = MYISAM  DEFAULT CHARSET=utf8";
+
+	run_sql( $sql );
 }
+
+
 
 add_action( 'UI_TODO_DETAIL_COMMENTBOX_BEFORE' , 'check_list_area' );
 function check_list_area( $data )
@@ -41,7 +54,125 @@ add_action( 'UI_HEAD' , 'check_list_js' );
 function check_list_js()
 {
 	echo '<script type="text/javascript" src="plugin/check_list/jquery-sortable-min.js"></script>';
+	echo '<script type="text/javascript" src="plugin/check_list/app.js"></script>';
+	echo '<link href="plugin/check_list/app.css" rel="stylesheet">';
+
 }
+
+add_action( 'PLUGIN_CHECK_LIST_TPL_SHOW' , 'plugin_check_list_tpl_show' );
+function plugin_check_list_tpl_show()
+{
+	$data['tpls'] = get_data("SELECT * FROM `checklist_tpl` WHERE `uid` = 0 OR `uid` = '" . intval( uid() ) . "' ");
+	return render( $data , 'ajax' , 'plugin' , 'check_list' ); 
+}
+
+add_action(  'PLUGIN_CHECK_LIST_TPL_APPLY' , 'plugin_check_list_tpl_apply');
+function plugin_check_list_tpl_apply()
+{
+	$tid = intval(v('tid'));
+	if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+	$todoid = intval(v('todoid'));
+	if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+
+	$sql = "SELECT `content` FROM `checklist_tpl` WHERE `id` = '" . intval( $tid ) . "' LIMIT 1";
+	if( $content = get_var( $sql ) )
+	{
+		$lines = explode( "\n" , trim( $content ) );
+		if( is_array( $lines ) )
+		{
+			$sql = "INSERT INTO `checklist` ( `tid` , `title` , `content` , `timeline` , `uid` ) VALUES  ";
+			foreach( $lines as $line )
+			{
+				$line = trim($line);
+				$isql[] = "( '" 
+		. intval($todoid) . "' , '" . s($line) . "' , '" . s($line) . "'  , NOW() , '" . intval(uid()) . "' )";
+			}
+
+			if( isset( $isql ) ) $sql = $sql . join( ' , ' , $isql );
+			run_sql( $sql );
+			
+		}
+		return render( array( 'code' => 0 , 'data' =>  array( 'tid' => $tid , 'content' => $content ) ) , 'rest' );
+	}
+	else
+		return render( array( 'code' => 100002 , 'message' => 'can not read data' ) , 'rest' );
+}
+
+
+
+add_action(  'PLUGIN_CHECK_LIST_TPL_REMOVE' , 'plugin_check_list_tpl_remove');
+function plugin_check_list_tpl_remove()
+{
+	if( !is_admin() ) return render( array( 'code' => 100002 , 'message' => 'ONLY ADMIN CAN DO THIS' ) , 'rest' );
+
+	$tid = intval(v('tid'));
+	if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+	$sql = "DELETE FROM `checklist_tpl` WHERE `id` = '" . intval( $tid ) . "' LIMIT 1";
+	run_sql($sql);
+
+	if( db_errno() == 0 )
+		return render( array( 'code' => 0 , 'data' =>  array( 'tid' => $tid ) ) , 'rest' );
+	else
+		return render( array( 'code' => 100002 , 'message' => 'can not read data' ) , 'rest' );
+}
+
+
+
+add_action(  'PLUGIN_CHECK_LIST_TPL_UPDATE' , 'plugin_check_list_tpl_update');
+function plugin_check_list_tpl_update()
+{
+	if( !is_admin() ) return render( array( 'code' => 100002 , 'message' => 'ONLY ADMIN CAN DO THIS' ) , 'rest' );
+
+	$tid = intval(v('tid'));
+	if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+	$content = z(t(v('content')));
+
+	$sql = "UPDATE `checklist_tpl` SET `content` = '" . s($content) . "' WHERE `id` = '" . intval( $tid ) . "' LIMIT 1";
+	run_sql($sql);
+	if( db_errno() == 0 )
+		return render( array( 'code' => 0 , 'data' =>  array( 'tid' => $tid , 'content'=>$content) ) , 'rest' );
+	else
+		return render( array( 'code' => 100002 , 'message' => 'can not read data' ) , 'rest' );
+
+}
+
+add_action(  'PLUGIN_CHECK_LIST_TPL_CREATE' , 'plugin_check_list_tpl_create');
+function plugin_check_list_tpl_create()
+{
+	if( !is_admin() ) return render( array( 'code' => 100002 , 'message' => 'ONLY ADMIN CAN DO THIS' ) , 'rest' );
+
+	$title = z(t(v('title')));
+	if( strlen( $title ) < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+	$content = z(t(v('content')));
+	
+	$sql = "INSERT INTO `checklist_tpl` ( `title` , `content` ) VALUES ( '" . s( $title ) . "' , '" . s($content) . "' ) ";
+	run_sql($sql);
+	
+	if( db_errno() == 0 )
+		return render( array( 'code' => 0 , 'data' =>  array( 'tid' => last_id() , 'title' => $title , 'content'=>$content) ) , 'rest' );
+	else
+		return render( array( 'code' => 100002 , 'message' => 'can not read data' ) , 'rest' );
+}
+
+add_action( 'PLUGIN_CHECK_LIST_TPL_DETAIL' , 'plugin_check_list_tpl_detail' );
+function plugin_check_list_tpl_detail()
+{
+	$tid = intval(v('tid'));
+	if( $tid < 1 ) return render( array( 'code' => 100002 , 'message' => 'bad args' ) , 'rest' );
+
+	$sql = "SELECT `content` FROM `checklist_tpl` WHERE `id` = '" . intval( $tid ) . "' AND ( `uid` = 0 OR `uid` = '" . intval( uid() ) . "') LIMIT 1";
+	$content = get_var( $sql );
+	if( db_errno() == 0 )
+		return render( array( 'code' => 0 , 'data' =>  array('content'=>$content) ) , 'rest' );
+	else
+		return render( array( 'code' => 100002 , 'message' => 'can not read data' ) , 'rest' );
+}
+
 
 add_action( 'PLUGIN_CHECKLIST_ADD' , 'plugin_checklist_add' );
 function plugin_checklist_add()
