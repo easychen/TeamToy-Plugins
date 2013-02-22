@@ -22,8 +22,8 @@ if( !mysql_query("SHOW COLUMNS FROM `checklist_tpl`",db()) )
   `timeline` datetime NOT NULL,
   `uid` int(11) NOT NULL,
   `is_done` tinyint(1) NOT NULL DEFAULT '0',
-  `sub_tid` int(11) NOT NULL,
-  `order` int(11) NOT NULL,
+  `sub_tid` int(11) NOT NULL DEFAULT '0',
+  `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `tid` (`tid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
