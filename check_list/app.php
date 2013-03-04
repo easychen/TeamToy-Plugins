@@ -382,10 +382,22 @@ function api_checklist_add()
 }
 
 // 为user profile 接口追加css数据
-add_filter( 'API_TODO_DETAIL_OUTPUT_FILTER' , 'api_check_list_detail' );
+add_filter( 'API_TODO_DETAIL_OUTPUT_FILTER' , 'api_check_list_detail'  );
 function api_check_list_detail( $data )
 {
 	$tid = intval($data['tid']);
 	$data['checklists'] = get_data("SELECT * FROM `checklist` WHERE `tid` = '" . intval($tid) . "' ORDER BY `order` DESC , `id` ASC LIMIT 100");
 	return $data;
 }
+
+add_filter( 'API_TODO_ASSIGN_OUTPUT_FILTER' , 'api_check_list_assign'   ); // todo_assign
+function api_check_list_assign( $data )
+{
+	$sql = "UPDATE `checklist` SET `uid` = '" . intval( $data['owner_uid'] ) . "' WHERE `tid` = '" . intval($data['tid']) . "' LIMIT 100";
+	run_sql( $sql );
+	return $data;
+}
+
+
+
+
