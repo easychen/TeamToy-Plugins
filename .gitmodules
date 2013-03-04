@@ -1,3 +1,6 @@
 [submodule "ttoy"]
 	path = ttoy
 	url = https://github.com/leeeboo/TeamToy_TToy_Plugin.git
+[submodule "board"]
+	path = board
+	url = https://github.com/luofei614/teamtoy-board
