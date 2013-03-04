@@ -4,3 +4,6 @@
 [submodule "board"]
 	path = board
 	url = https://github.com/luofei614/teamtoy-board
+[submodule "note"]
+	path = note
+	url = https://github.com/luofei614/teamtoy-note
