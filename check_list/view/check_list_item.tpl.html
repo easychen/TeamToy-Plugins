@@ -2,4 +2,4 @@
 	<a class="move"><i class="icon-move"></i></a>
 	<a class="close" ckid="<?=$item['id']?>">&times;</a>
 	<a class="ing" ckid="<?=$item['id']?>"><i class="icon-circle-arrow-right"></i></a>
-	<label class="checkbox"><input ckid="<?=$item['id']?>" type="checkbox" <?=intval($item['is_done'])==1?' checked ':''?>><?=t($item['title'])?></label></li>
+	<label class="checkbox"><input ckid="<?=$item['id']?>" type="checkbox" <?=intval($item['is_done'])==1?' checked ':''?> <?php if( $data['owner_uid'] != uid() || intval($data['details']['status']) == 3 ){ echo " disabled=true "; } ?> ><?=t($item['title'])?></label></li>

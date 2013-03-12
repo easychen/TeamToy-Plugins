@@ -35,6 +35,8 @@ if( !mysql_query("SHOW COLUMNS FROM `mail_queue`",db()) )
 		$sql = $sql . join( ' , ' , $v );
 		run_sql( $sql );
 	}
+
+	kset( 'mqueue_not_online' , 1 );
 }
 
 // 添加邮件设置菜单
@@ -54,6 +56,7 @@ function  plugin_mail_queue()
 	$data['mqueue_port'] = kget('mqueue_port');
 	$data['mqueue_username'] = kget('mqueue_username');
 	$data['mqueue_password'] = kget('mqueue_password');
+	$data['mqueue_not_online'] = kget('mqueue_not_online');
 	return render( $data , 'ajax' , 'plugin' , 'mail_queue' ); 
 }
 
@@ -65,6 +68,7 @@ function  plugin_mail_queue_save()
 	$mqueue_port = z(t(v('mqueue_port')));
 	$mqueue_username = z(t(v('mqueue_username')));
 	$mqueue_password = z(t(v('mqueue_password')));
+	$mqueue_not_online = intval(t(v('mqueue_not_online')));
 
 	if( strlen( $mqueue_server ) < 1 
 		|| strlen( $mqueue_port ) < 1 
@@ -78,6 +82,7 @@ function  plugin_mail_queue_save()
 	kset('mqueue_port' , $mqueue_port);	
 	kset('mqueue_username' , $mqueue_username);	
 	kset('mqueue_password' , $mqueue_password);	
+	kset('mqueue_not_online' , $mqueue_not_online);	
 
 	return ajax_echo('设置已保存<script>setTimeout( close_float_box, 500)</script>');
 
@@ -142,6 +147,37 @@ function check_mail_script()
 	?>
 	var sending_mail = false;
 	var mail_noty = null ;
+
+	function mqueue_test()
+	{
+		var url = '?c=plugin&a=test_mail' ;
+		var params = {};
+
+		var params = {};
+		$.each( $('#mqueue_form').serializeArray(), function(index,value) 
+		{
+			params[value.name] = value.value;
+		});
+
+		$.post( url , params , function( data )
+		{
+			var data_obj = $.parseJSON( data );
+			if( data_obj.err_code == 0 )
+			{
+				mail_noty = noty(
+				{
+						text:'已经向'+ data_obj.data.mail_sent +'发送了邮件，请登入邮箱检查。如果邮件在垃圾箱，请将发件人加入白名单。',
+						layout:'topRight',
+				});
+			}
+			else
+			{
+				return alert('发送失败，请检查配置想是否填写完整，错误信息'+data_obj.err_msg);
+			}
+		});	
+	}
+
+
 	function check_mail()
 	{
 		var url = '?c=plugin&a=check_mail' ;
@@ -186,6 +222,46 @@ function check_mail_script()
 	<?php
 }
 
+// test_mail
+
+add_action( 'PLUGIN_TEST_MAIL' , 'plugin_test_mail' );
+function plugin_test_mail()
+{
+	include_once( AROOT .'model' . DS . 'api.function.php');
+	include_once( AROOT .'controller' . DS . 'api.class.php');
+	
+	$mqueue_on = intval(t(v('mqueue_on')));
+	$mqueue_server = z(t(v('mqueue_server')));
+	$mqueue_port = z(t(v('mqueue_port')));
+	$mqueue_username = z(t(v('mqueue_username')));
+	$mqueue_password = z(t(v('mqueue_password')));
+	
+
+	if( strlen( $mqueue_server ) < 1 
+		|| strlen( $mqueue_port ) < 1 
+		|| strlen( $mqueue_username ) < 1 
+		|| strlen( $mqueue_password ) < 1 
+
+	)
+	return apiController::send_error( LR_API_ARGS_ERROR , 'SMTP ARGS ERROR ' );
+
+
+	if($user = get_user_info_by_id( uid() ))
+	{
+		session_write_close();
+		
+		if(phpmailer_send_mail( $user['email'] , '来自TeamToy的测试邮件 '.date("Y-m-d H:i") , '如果您收到这封邮件说明您在SMTP中的邮件配置是正确的；如果您在垃圾邮箱找到这封邮件，请将发件人加入白名单。' 
+				, $mqueue_username , $mqueue_server , $mqueue_port 
+				, $mqueue_username , $mqueue_password  ))
+		{
+			return apiController::send_result( array( 'mail_sent' => $user['email'] ) );
+		}
+	}
+
+	return apiController::send_error( 200010 , 'SMTP ERROR ' );
+	
+}
+
 add_action( 'PLUGIN_CHECK_MAIL' , 'plugin_check_mail' );
 function plugin_check_mail()
 {
@@ -225,7 +301,14 @@ function send_notice_mail( $data )
 
 		// 检查是否在线
 		// 只有不在线的时候发送邮件通知
-		if(  !is_online( $data['uid'] ) )
+		$send = true;
+
+		if( intval( kget('mqueue_not_online') ) == 1 && is_online( $data['uid'] ) )
+		$send = false;
+
+
+
+		if( $send )
 		{
 			$user = get_user_info_by_id( $data['uid'] );
 			$dd = array();

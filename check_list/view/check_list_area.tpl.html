@@ -1,6 +1,13 @@
 <div class="line"></div>
-<h2 class="side_board">CheckList <span id="check_count"></span> <a class="side_link" title="编辑CheckList" id="ck_edit_icon" href="javascript:ck_edit_toggle();"><i class="icon-edit"></i></a> </h2>
+<h2 class="side_board">CheckList <span id="check_count"></span>
+<?php if( $data['owner_uid'] == uid() && intval($data['details']['status']) != 3  ): ?>
+ <a class="side_link" title="编辑CheckList" id="ck_edit_icon" href="javascript:ck_edit_toggle();"><i class="icon-edit"></i></a> 
+<?php endif; ?>
+</h2>
+
+
 <?php if( isset( $checklists ) && is_array( $checklists )  ): ?>
+<!-- checklist  -->
 <div id="checklist_container">
 <ul id="checklist_list" class="cklist" tid="<?=$data['tid']?>">
 <?php foreach( $checklists as $item ): ?>
@@ -8,24 +15,41 @@
 <?php endforeach;?>
 </ul>
 </div>
+
+<?php if( $data['owner_uid'] == uid() && intval($data['details']['status']) != 3 ): ?>
 <div id="edit_links">
+
 <?php if( intval(g('TODO_CENTER_MODE'))!= 1 ): ?>
   <a href="javascript:check_list_tpl_show('<?=$data['tid']?>');void(0);" class="pull-right"><i class="icon-list-alt"></i> 模板</a>
   <?php endif; ?>
 <a class="edit_show" href="javascript:check_list_add();void(0);" id="check_list_add_link"><i class="icon-plus"></i> 追加检查项</a>
 </div>
+ <?php endif; ?>
+
 <script type="text/javascript">
 bind_checklist();
 count_checklist();
 </script>
+
+<!-- /checklist  -->
+
+
 <?php else: ?>
+
+<!-- checklist empty  -->
+
 	<ul id="checklist_list" class="empty cklist" tid="<?=$data['tid']?>"></ul>
-	<div id="edit_links">
+	<?php if( $data['owner_uid'] == uid() && intval($data['details']['status']) != 3 ): ?>
+  <div id="edit_links">
 	<?php if( intval(g('TODO_CENTER_MODE'))!= 1 ): ?>
   <a href="javascript:check_list_tpl_show('<?=$data['tid']?>');void(0);" class="pull-right"><i class="icon-list-alt"></i> 模板</a>
   <?php endif; ?>
 	<a class="edit_show" href="javascript:check_list_add();void(0);" id="check_list_add_link"><i class="icon-plus"></i> 追加检查项</a>
 	</div>
+  <?php endif; ?>
+
+ <!-- checklist  -->
+ 
 <?php endif; ?>	
 
 
