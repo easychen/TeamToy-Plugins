@@ -172,7 +172,7 @@ function check_mail_script()
 			}
 			else
 			{
-				return alert('发送失败，请检查配置想是否填写完整，错误信息'+data_obj.err_msg);
+				return alert('发送失败，请检查配置项是否填写完整，错误信息'+data_obj.err_msg);
 			}
 		});	
 	}
@@ -258,7 +258,7 @@ function plugin_test_mail()
 		}
 	}
 
-	return apiController::send_error( 200010 , 'SMTP ERROR ' );
+	return apiController::send_error( 200010 , 'SMTP ERROR - ' . g('LP_MAILER_ERROR') );
 	
 }
 
