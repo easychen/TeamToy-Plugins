@@ -11,6 +11,8 @@ TeamToy extenstion info block
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=check_list 
 ***/
 
+if( !defined('IN') ) die('bad request');
+
 if( !mysql_query("SHOW COLUMNS FROM `checklist_tpl`",db()) )
 {
 
@@ -42,7 +44,72 @@ INDEX (  `uid` )
 	run_sql( $sql );
 }
 
+$plugin_lang = array();
 
+$plugin_lang['zh_cn'] = array
+(
+
+	'PL_CHECK_LIST_EDIT' => '编辑CheckList',
+	'PL_CHECK_LIST_TEMPLATE' => '模板',
+	'PL_CHECK_LIST_ADD_ITEM' => '追加检查项',
+	'PL_CHECK_LIST_TEMPLATE_REMOVE' => '删除',
+	'PL_CHECK_LIST_TEMPLATE_CREATE' => '创建',
+	'PL_CHECK_LIST_TEMPLATE_UPDATE' => '保存修改',
+	'PL_CHECK_LIST_TEMPLATE_APPLY' => '追加到TODO',
+	'JS_PL_CHECK_LIST_ITEM_REMOVE_CONFIRM' => '检查项移除后将不可恢复，继续？',
+	'JS_PL_CHECK_LIST_MARK_TODO_READ_CONFIRM' => '你已经完成了TODO的全部CheckList，要将TODO标记为完成么？',
+	'JS_PL_CHECK_LIST_TEMPLATE_REMOVE_CONFIRM' => '确定要删除CheckList模板【%s(%s)】吗？',
+	'JS_PL_CHECK_LIST_TEMPLATE' => '编辑CheckList模板',
+	'JS_PL_CHECK_LIST_TEMPLATE_UPDATED' => '模板内容已保存',
+	'JS_PL_CHECK_LIST_TEMPLATE_NAME' => '请输入模板名称',
+	'JS_PL_CHECK_LIST_TEMPLATE_INTRO' => '填写CheckList检查项，每行一条',
+	'JS_PL_CHECK_LIST_TID_ERROR' => '错误的TID',
+	'PL_CHECK_LIST_TEST' => ''
+);
+
+$plugin_lang['zh_tw'] = array
+(
+
+	'PL_CHECK_LIST_EDIT' => '編輯CheckList',
+	'PL_CHECK_LIST_TEMPLATE' => '模板',
+	'PL_CHECK_LIST_ADD_ITEM' => '追加檢查項',	
+	'PL_CHECK_LIST_TEMPLATE_REMOVE' => '刪除',
+	'PL_CHECK_LIST_TEMPLATE_CREATE' => '創建',
+	'PL_CHECK_LIST_TEMPLATE_UPDATE' => '保存修改',
+	'PL_CHECK_LIST_TEMPLATE_APPLY' => '追加到TODO',
+	'JS_PL_CHECK_LIST_ITEM_REMOVE_CONFIRM' => '檢查項移除後將不可恢復，繼續？ ',
+	'JS_PL_CHECK_LIST_MARK_TODO_READ_CONFIRM' => '你已經完成了TODO的全部CheckList，要將TODO標記為完成么？ ',
+	'JS_PL_CHECK_LIST_TEMPLATE_REMOVE_CONFIRM' => '確定要刪除CheckList模板【%s(%s)】嗎？ ',
+	'JS_PL_CHECK_LIST_TEMPLATE' => '編輯CheckList模板',
+	'JS_PL_CHECK_LIST_TEMPLATE_UPDATED' => '模板內容已保存',
+	'JS_PL_CHECK_LIST_TEMPLATE_NAME' => '請輸入模板名稱',
+	'JS_PL_CHECK_LIST_TEMPLATE_INTRO' => '填寫CheckList檢查項，每行一條',
+	'JS_PL_CHECK_LIST_TID_ERROR' => '錯誤的TID',
+	'PL_CHECK_LIST_TEST' => ''
+);
+
+$plugin_lang['us_en'] = array
+(
+
+	'PL_CHECK_LIST_EDIT' => 'Edit CheckList',
+	'PL_CHECK_LIST_TEMPLATE' => 'Teamplate',
+	'PL_CHECK_LIST_ADD_ITEM' => 'Append items',	
+	'PL_CHECK_LIST_TEMPLATE_REMOVE' => 'Remove',
+	'PL_CHECK_LIST_TEMPLATE_CREATE' => 'Create',
+	'PL_CHECK_LIST_TEMPLATE_UPDATE' => 'Save',
+	'PL_CHECK_LIST_TEMPLATE_APPLY' => 'Apply to TODO',
+	'JS_PL_CHECK_LIST_ITEM_REMOVE_CONFIRM' => 'Item will be remove, continue? ',
+	'JS_PL_CHECK_LIST_MARK_TODO_READ_CONFIRM' => 'All check items finished, mark TODO as done?',
+	'JS_PL_CHECK_LIST_TEMPLATE_REMOVE_CONFIRM' => 'Remove CheckList template[%s(%s)]?',
+	'JS_PL_CHECK_LIST_TEMPLATE' => 'Edite Template',
+	'JS_PL_CHECK_LIST_TEMPLATE_UPDATED' => 'Template updated',
+	'JS_PL_CHECK_LIST_TEMPLATE_NAME' => 'Input template name',
+	'JS_PL_CHECK_LIST_TEMPLATE_INTRO' => 'Add check items here,one line each',
+	'JS_PL_CHECK_LIST_TID_ERROR' => 'Bad TID',
+	'PL_CHECK_LIST_TEST' => ''
+);
+
+plugin_append_lang( $plugin_lang );
 
 add_action( 'UI_TODO_DETAIL_COMMENTBOX_BEFORE' , 'check_list_area' );
 function check_list_area( $data )

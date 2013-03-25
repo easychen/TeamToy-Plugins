@@ -1,0 +1,26 @@
+<div class="row-fluid">	
+<form class="form-horizontal" action="?c=plugin&a=dropbox_save" method="post" id="dropbox_form">
+	<div class="control-group">
+		<label class="control-label" for="dropbox_akey">DropBox AppKey</label>
+		<div class="controls">
+			<input type="text" class="input" id="dropbox_akey" name="dropbox_akey" value="<?=$dropbox_akey?>">
+		</div>
+	</div>
+
+	
+	<div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox" name="dropbox_on" value="1" <?=intval($dropbox_on)==1?' checked ':''?>> 启用
+      </label>
+    </div>
+  </div>
+	
+	
+	
+	<div class="form-actions">
+            <a type="button" class="btn btn-primary" href="javascript:send_form_in('dropbox_form');">保存</a>
+
+</form>
+
+</div>	

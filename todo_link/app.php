@@ -10,6 +10,8 @@ TeamToy extenstion info block
 ##update_url http://tt2net.sinaapp.com/?c=plugin&a=update_package&name=todo_link
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=todo_link
 ***/
+if( !defined('IN') ) die('bad request');
+
 
 add_action( 'UI_TODO_DETAIL_TITLE_AFTER' , 'plugin_todo_link_show' );
 add_action( 'UI_TODO_DETAIL_CENTER_TITLE_AFTER' , 'plugin_todo_link_show' );
@@ -26,4 +28,19 @@ function plugin_todo_link_show( $data )
 		</div>
 		<?php
 	}
+}
+
+add_action( 'UI_HEAD' ,'plugin_todo_link_css');
+function plugin_todo_link_css()
+{
+	?>
+	<style type="text/css">
+	.todo_elink
+	{
+		white-space: wrap;
+		word-wrap: break-word;
+		word-break: break-all;
+	}
+	</style>
+	<?php
 }

@@ -11,6 +11,8 @@ TeamToy extenstion info block
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=stoken 
 ***/
 
+if( !defined('IN') ) die('bad request');
+
 // 创建方便外部引用的长期Token，可手工关闭和重置
 
 // 检查并创建数据库
@@ -27,11 +29,80 @@ if( !mysql_query("SHOW COLUMNS FROM `stoken`",db()) )
 
 }
 
+$plugin_lang = array();
+$plugin_lang['zh_cn'] = array
+(
+	'PL_SIMPLE_TOKEN_MENU' => 'Simple Token API',
+	'PL_SIMPLE_TOKEN_TITLE' => 'Simple Token',
+	'PL_SIMPLE_TOKEN_EXPLAIN' => '<p>SimpleToken是一个永不过期的Token，通过它你可以直接用URL访问TeamToy数据。</p>
+<p>为保证安全，请在不使用时关闭此功能。</p>',
+	'PL_SIMPLE_TOKEN_TO_ACTIVE' => '启用Token',
+	'PL_SIMPLE_TOKEN_STOPPED' => 'Token %s (已停用)',
+	'PL_SIMPLE_TOKEN_ACTIVE' => 'Token %s ',
+	'PL_SIMPLE_TOKEN_RESET' => '重置Token',
+	'PL_SIMPLE_TOKEN_STOP' => '停用Token',
+	'PL_SIMPLE_TOKEN_DOC_TODOLIST' => '<a href="?c=api&a=todo_list&stoken=%s" target="new">获取我的TODO List</a>',
+	'PL_SIMPLE_TOKEN_DOC_UNREAD_MESSAGE' => '<a href="?c=api&a=user_unread&stoken=%s" target="new">获取我的未读消息</a>',
+	'PL_SIMPLE_TOKEN_DOC_MEMBERS' => '<a href="?c=api&a=team_members&stoken=%s" target="new">获取成员联系信息</a>',
+	'PL_SIMPLE_TOKEN_DOC_FEED' => '<a href="?c=api&a=feed_list&stoken=%s" target="new">获取最新团队动态</a>',
+	'PL_SIMPLE_TOKEN_DOC_MORE' => '<a href="%s/apidoc.html" target="_blank">查看更多API</a><br/>↑将文档中的\'token\'变量改为\'stoken\'即可',
+	'PL_SIMPLE_TOKEN_CREATE_ERROR' => '创建失败，请稍后再试',
+	'PL_SIMPLE_TOKEN_RESET_CONFIRM' => '确定要重置Token么？之前使用了接口的程序可能因此失效。',
+	
+	'PL_SIMPLE_TOKEN_TEST' => ''
+);
+
+$plugin_lang['zh_tw'] = array
+(
+'PL_SIMPLE_TOKEN_MENU' => 'Simple Token API',
+'PL_SIMPLE_TOKEN_TITLE' => 'Simple Token',
+'PL_SIMPLE_TOKEN_EXPLAIN' => '<p>SimpleToken是一個永不過期的Token，通過它你可以直接用URL訪問TeamToy數據。 </p>
+<p>為保證安全，請在不使用時關閉此功能。 </p>',
+'PL_SIMPLE_TOKEN_TO_ACTIVE' => '啟用Token',
+'PL_SIMPLE_TOKEN_STOPPED' => 'Token %s (已停用)',
+'PL_SIMPLE_TOKEN_ACTIVE' => 'Token %s ',
+'PL_SIMPLE_TOKEN_RESET' => '重置Token',
+'PL_SIMPLE_TOKEN_STOP' => '停用Token',
+'PL_SIMPLE_TOKEN_DOC_TODOLIST' => '<a href="?c=api&a=todo_list&stoken=%s" target="new">獲取我的TODO List</a>',
+'PL_SIMPLE_TOKEN_DOC_UNREAD_MESSAGE' => '<a href="?c=api&a=user_unread&stoken=%s" target="new">獲取我的未讀消息</a>',
+'PL_SIMPLE_TOKEN_DOC_MEMBERS' => '<a href="?c=api&a=team_members&stoken=%s" target="new">獲取成員聯繫信息</a>',
+'PL_SIMPLE_TOKEN_DOC_FEED' => '<a href="?c=api&a=feed_list&stoken=%s" target="new">獲取最新團隊動態</a>',
+'PL_SIMPLE_TOKEN_DOC_MORE' => '<a href="%s/apidoc.html" target="_blank">查看更多API</a><br/>↑將文檔中的\'token\'變量改為\'stoken\'即可',
+'PL_SIMPLE_TOKEN_CREATE_ERROR' => '創建失敗，請稍後再試',
+'PL_SIMPLE_TOKEN_RESET_CONFIRM' => '確定要重置Token麼？之前使用了接口的程序可能因此失效。 ',
+
+'PL_SIMPLE_TOKEN_TEST' => ''
+);
+
+$plugin_lang['us_en'] = array
+(
+'PL_SIMPLE_TOKEN_MENU' => 'Simple Token API',
+'PL_SIMPLE_TOKEN_TITLE' => 'Simple Token',
+'PL_SIMPLE_TOKEN_EXPLAIN' => '<p> SimpleToken is a token never expires, through which you can directly access TeamToy data via URL  </ p>
+<p>Please turn this feature off when not in use to ensure safety</ p> ',
+'PL_SIMPLE_TOKEN_TO_ACTIVE' => 'Enable Token',
+'PL_SIMPLE_TOKEN_STOPPED' => 'Token %s (disabled)',
+'PL_SIMPLE_TOKEN_ACTIVE' => 'Token %s',
+'PL_SIMPLE_TOKEN_RESET' => 'Reset Token',
+'PL_SIMPLE_TOKEN_STOP' => 'Disable Token',
+'PL_SIMPLE_TOKEN_DOC_TODOLIST' => '<a href="?c=api&a=todo_list&stoken=%s" target="new">Get my TODO List </ a>',
+'PL_SIMPLE_TOKEN_DOC_UNREAD_MESSAGE' => '<a href="?c=api&a=user_unread&stoken=%s" target="new"> Get my unread messages </ a>',
+'PL_SIMPLE_TOKEN_DOC_MEMBERS' => '<a href="?c=api&a=team_members&stoken=%s" target="new"> Get members\' contact information </ a>',
+'PL_SIMPLE_TOKEN_DOC_FEED' => '<a href="?c=api&a=feed_list&stoken=%s" target="new"> Get team feeds</ a>',
+'PL_SIMPLE_TOKEN_DOC_MORE' => '<a href="%s/apidoc.html" target="_blank">More API </ a> ↑ change the \' token \'variable to \'stoken \' in document  ',
+'PL_SIMPLE_TOKEN_CREATE_ERROR' => 'Create failed, please try again later',
+'PL_SIMPLE_TOKEN_RESET_CONFIRM' => 'Reset Token now? Old code using this token may not available ',
+
+'PL_SIMPLE_TOKEN_TEST' =>''
+);
+
+plugin_append_lang( $plugin_lang );
+
 // 添加顶部导航按钮
 add_action( 'UI_USERMENU_BOTTOM' , 'stoken_user_menu' );
 function stoken_user_menu()
 {
-	?><li><a href="javascript:show_float_box( 'SimpleToken' , '?c=plugin&a=simple_token' );void(0);">通过Token访问数据</a></li>
+	?><li><a href="javascript:show_float_box( '<?=__('PL_SIMPLE_TOKEN_TITLE')?>' , '?c=plugin&a=simple_token' );void(0);"><?=__('PL_SIMPLE_TOKEN_MENU')?></a></li>
 	<?php 	
 }
 

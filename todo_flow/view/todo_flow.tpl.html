@@ -55,7 +55,7 @@ ul.todo_flow li.done a
 
 
 </style>
-<h2 class="main_board">团队TODO一览</h2>
+<h2 class="main_board"><?=__('PL_TODO_FLOW_TITLE')?></h2>
 <div class="line"></div>
 <?php
  if( isset($uids) && is_array($uids) ): ?>
@@ -77,13 +77,6 @@ ul.todo_flow li.done a
     			duration: 400
   			}
   		});
-	}
-
-	function go_follow( tid )
-	{
-		if( confirm( '关注此TODO后可在TODO页面【我关注的TODO】分类查看。继续？' ) )
-		return todo_follow( tid );
-
 	}
 
 	function load_todo_flow()

@@ -11,13 +11,50 @@ TeamToy extenstion info block
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=basic_auth 
 ***/
 
+if( !defined('IN') ) die('bad request');
+
+$plugin_lang = array();
+$plugin_lang['zh_cn'] = array
+(
+	'PL_BASIC_AUTH_SETTINGS_TITLE' => 'Basic认证设置',
+	'PL_BASIC_AUTH_PASSWORD_NOT_SAME' => '两次输入的密码不一致，请重新输入',
+	'PL_BASIC_AUTH_SETTINGS_UPDATED' => '设置已保存',
+	'PL_BASIC_AUTH_USERNAME' => '用户名',
+	'PL_BASIC_AUTH_PASSWORD' => '密码',
+	'PL_BASIC_AUTH_PASSWORD_REPEAT' => '重复密码',
+	'PL_BASIC_AUTH_ACTIVE' => '启用'
+);
+
+$plugin_lang['zh_tw'] = array
+(
+	'PL_BASIC_AUTH_SETTINGS_TITLE' => 'Basic認證設置',
+	'PL_BASIC_AUTH_PASSWORD_NOT_SAME' => '兩次輸入的密碼不一致，請重新輸入',
+	'PL_BASIC_AUTH_SETTINGS_UPDATED' => '設置已保存',
+	'PL_BASIC_AUTH_USERNAME' => '用戶名',
+	'PL_BASIC_AUTH_PASSWORD' => '密碼',
+	'PL_BASIC_AUTH_PASSWORD_REPEAT' => '重複密碼',
+	'PL_BASIC_AUTH_ACTIVE' => '啟用'
+);
+
+$plugin_lang['us_en'] = array
+(
+	'PL_BASIC_AUTH_SETTINGS_TITLE' => 'Basic Settings',
+	'PL_BASIC_AUTH_PASSWORD_NOT_SAME' => 'Password not same , retry please',
+	'PL_BASIC_AUTH_SETTINGS_UPDATED' => 'Settings updated',
+	'PL_BASIC_AUTH_USERNAME' => 'User',
+	'PL_BASIC_AUTH_PASSWORD' => 'Password',
+	'PL_BASIC_AUTH_PASSWORD_REPEAT' => 'Repeat',
+	'PL_BASIC_AUTH_ACTIVE' => 'Active'
+);
+
+plugin_append_lang( $plugin_lang );
 
 
 // 添加邮件设置菜单
 add_action( 'UI_USERMENU_ADMIN_LAST' , 'basic_auth_menu_list');
 function basic_auth_menu_list()
 {
-	?><li><a href="javascript:show_float_box( 'Basic认证设置' , '?c=plugin&a=basic_auth' );void(0);">Basic认证设置</a></li>
+	?><li><a href="javascript:show_float_box( '<?=__('PL_BASIC_AUTH_SETTINGS_TITLE')?>' , '?c=plugin&a=basic_auth' );void(0);"><?=__('PL_BASIC_AUTH_SETTINGS_TITLE')?></a></li>
 	<?php 	 	
 } 
 
@@ -46,7 +83,7 @@ add_action( 'PLUGIN_BASIC_AUTH_SAVE' , 'plugin_basic_auth_save');
 function  plugin_basic_auth_save()
 {
 	if( z(t(v('bauth_password'))) != z(t(v('bauth_password2'))) ) 
-	return ajax_echo('两次输入的密码不一致，请重新输入');
+	return ajax_echo(__('PL_BASIC_AUTH_PASSWORD_NOT_SAME'));
 	
 	$bauth_username = z(t(v('bauth_username')));
 	$bauth_password = z(t(v('bauth_password')));
@@ -57,7 +94,7 @@ function  plugin_basic_auth_save()
 	kset('bauth_password' , $bauth_password);	
 	kset('bauth_on' , $bauth_on);		
 
-	return ajax_echo('设置已保存<script>setTimeout( close_float_box, 500)</script>');
+	return ajax_echo( __('PL_BASIC_AUTH_SETTINGS_UPDATED').'<script>setTimeout( close_float_box, 500)</script>');
 
 }
 

@@ -9,16 +9,16 @@
 	</select>
 	<?php if( is_admin() ): ?>
 	<div>
-		<a href="javascript:check_list_tpl_remove($('#tpl_select option:selected').text());void(0);" class="pull-right"><i class="icon-close"></i> 删除</a>
-		<a href="javascript:check_list_tpl_create();void(0);"><i class="icon-plus"></i> 创建</a>
+		<a href="javascript:check_list_tpl_remove($('#tpl_select option:selected').text());void(0);" class="pull-right"><i class="icon-close"></i> <?=__('PL_CHECK_LIST_TEMPLATE_REMOVE')?></a>
+		<a href="javascript:check_list_tpl_create();void(0);"><i class="icon-plus"></i> <?=__('PL_CHECK_LIST_TEMPLATE_CREATE')?></a>
 	</div>
 	<?php endif; ?>
   </div>
   	<div class="span8">
   		<textarea class="border tplbox" id="tpl_text" name="tpl_text" <?php if( !is_admin() ): ?>readOnly="true"<?php else: ?> onkeypress="cktpll_changed();" <?php endif; ?> ></textarea>
   		<div>
-  			<?php if( is_admin() ): ?><a href="javascript:check_list_tpl_update();void(0);" id="ckltpl_update_btn" class="pull-right btn">保存修改</a><?php endif; ?>
-  			<a href="javascript:check_list_tpl_apply('<?=intval(v('todoid'))?>');void(0);" class="pull-right btn" id="ckltpl_apply_btn" >追加到TODO</a> 
+  			<?php if( is_admin() ): ?><a href="javascript:check_list_tpl_update();void(0);" id="ckltpl_update_btn" class="pull-right btn"><?=__('PL_CHECK_LIST_TEMPLATE_UPDATE')?></a><?php endif; ?>
+  			<a href="javascript:check_list_tpl_apply('<?=intval(v('todoid'))?>');void(0);" class="pull-right btn" id="ckltpl_apply_btn" ><?=__('PL_CHECK_LIST_TEMPLATE_APPLY')?></a> 
   		</div>	
 
 	</div>

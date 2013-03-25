@@ -19,7 +19,7 @@ function checklist_reorder( tid , ordstring )
 		}
 		else
 		{
-			alert('API调用错误，请稍后再试。错误号'+data_obj.err_code + ' 错误信息 ' + data_obj.message);
+			alert( __('JS_API_ERROR_INFO' , [ data_obj.err_code , data_obj.message ] ) );
 		}
 
 		done();
@@ -51,7 +51,7 @@ function check_list_save( tid , text )
 		}
 		else
 		{
-			alert('API调用错误，请稍后再试。错误号'+data_obj.err_code + ' 错误信息 ' + data_obj.message);
+			alert( __('JS_API_ERROR_INFO' , [ data_obj.err_code , data_obj.message ] ) );
 		}
 
 		done();
@@ -74,7 +74,7 @@ function bind_checklist()
 	$('#checklist_list a.close').unbind('click');
 	$('#checklist_list a.close').bind('click',function()
 	{
-		if( confirm('检查项移除后将不可恢复，继续？') )
+		if( confirm(__('JS_PL_CHECK_LIST_ITEM_REMOVE_CONFIRM')) )
 		{
 			var url = '?c=plugin&a=checklist_remove' ;
 			var ckid = $(this).attr('ckid');
@@ -86,7 +86,7 @@ function bind_checklist()
 				if( data_obj.err_code == 0 )
 					$('#checklist_list li[ckid='+ckid+']').remove();
 				else
-					alert('API调用错误，请稍后再试。错误号'+data_obj.err_code + ' 错误信息 ' + data_obj.message);
+					alert( __('JS_API_ERROR_INFO' , [ data_obj.err_code , data_obj.message ] ) );
 				
 				count_checklist();
 				done();
@@ -136,7 +136,7 @@ function bind_checklist()
 						$('#checklist_list li[ckid='+ ckid +']').addClass('checked');
 						if( $('#checklist_list li').length == $('#checklist_list li.checked').length )
 						{
-							if( confirm('你已经完成了TODO的全部CheckList，要将TODO标记为完成么？') )
+							if( confirm(__('JS_PL_CHECK_LIST_MARK_TODO_READ_CONFIRM')) )
 							{
 								mark_todo_done( parseInt( $('#checklist_list').attr('tid') ) );
 							}
@@ -145,7 +145,7 @@ function bind_checklist()
 					else $('#checklist_list li[ckid='+ ckid +']').removeClass('checked');
 				}
 				else
-					alert('API调用错误，请稍后再试。错误号'+data_obj.err_code + ' 错误信息 ' + data_obj.message);
+					alert( __('JS_API_ERROR_INFO' , [ data_obj.err_code , data_obj.message ] ) );
 				
 				count_checklist();
 				done();
@@ -198,7 +198,7 @@ function cklist_sortable()
 
 function check_list_tpl_show( todoid )
 {
-	show_float_box( 'CheckList模板' , '?c=plugin&a=check_list_tpl_show&todoid='+todoid);
+	show_float_box( __('JS_PL_CHECK_LIST_TEMPLATE') , '?c=plugin&a=check_list_tpl_show&todoid='+todoid);
 }
 
 function check_list_tpl_apply( todoid )
@@ -206,7 +206,7 @@ function check_list_tpl_apply( todoid )
 	var tid = parseInt( $('#tpl_select option:selected').attr('value') );
 	if( tid  < 1 || isNaN(tid) )
 	{
-		alert('tid错误');
+		alert(__('JS_PL_CHECK_LIST_TID_ERROR'));
 		return false;
 	} 
 
@@ -233,10 +233,10 @@ function check_list_tpl_remove(title)
 	var tid = parseInt( $('#tpl_select option:selected').attr('value') );
 	if( tid  < 1 || isNaN(tid) )
 	{
-		alert('tid错误');
+		alert(__('JS_PL_CHECK_LIST_TID_ERROR'));
 		return false;
 	} 
-	if( confirm('确定要删除CheckList模板【'+title+'('+tid+')】吗？') )
+	if( confirm( __('JS_PL_CHECK_LIST_TEMPLATE_REMOVE_CONFIRM',[title,tid])) )
 	{
 		var url = '?c=plugin&a=check_list_tpl_remove' ;
 		var params = { 'tid':tid,'content':$('#tpl_text').val()  };
@@ -262,7 +262,7 @@ function check_list_tpl_update()
 	var tid = parseInt( $('#tpl_select option:selected').attr('value') );
 	if( tid  < 1 || isNaN(tid) )
 	{
-		alert('tid错误');
+		alert(__('JS_PL_CHECK_LIST_TID_ERROR'));
 		return false;
 	} 
 	var url = '?c=plugin&a=check_list_tpl_update' ;
@@ -275,7 +275,7 @@ function check_list_tpl_update()
 				done();
 				noty(
 				{
-					text:'模板内容已保存',
+					text:__('JS_PL_CHECK_LIST_TEMPLATE_UPDATED'),
 					timeout:1000,
 					layout:'topRight'
 				});
@@ -295,11 +295,11 @@ function cktpll_changed()
 
 function check_list_tpl_create()
 {
-	var tname = prompt('请输入模板名称');
+	var tname = prompt(__('JS_PL_CHECK_LIST_TEMPLATE_NAME'));
 	if( tname != null && tname.length > 0  )
 	{
 		var url = '?c=plugin&a=check_list_tpl_create' ;
-		var params = { 'title':tname,'content' : '填写CheckList检查项，每行一条'  };
+		var params = { 'title':tname,'content' : __('JS_PL_CHECK_LIST_TEMPLATE_INTRO')  };
 		$.post( url , params , function( data )
 		{
 			var data_obj = $.parseJSON( data );
@@ -331,7 +331,7 @@ function check_list_tpl_set2text( tid )
 		}
 		else
 		{
-			alert('API调用错误，请稍后再试。错误号'+data_obj.err_code + ' 错误信息 ' + data_obj.message);
+			alert( __('JS_API_ERROR_INFO' , [ data_obj.err_code , data_obj.message ] ) );
 		}
 
 		done();

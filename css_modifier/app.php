@@ -10,6 +10,7 @@ TeamToy extenstion info block
 ##update_url http://tt2net.sinaapp.com/?c=plugin&a=update_package&name=css_modifier 
 ##reverison_url http://tt2net.sinaapp.com/?c=plugin&a=latest_reversion&name=css_modifier 
 ***/
+if( !defined('IN') ) die('bad request');
 
 // 检查并创建数据库
 if( !mysql_query("SHOW COLUMNS FROM `css`",db()) )
@@ -24,11 +25,39 @@ if( !mysql_query("SHOW COLUMNS FROM `css`",db()) )
 
 }
 
+$plugin_lang = array();
+
+$plugin_lang['zh_cn'] = array
+(
+
+	'PL_CSS_MODIFIER_MENU_TITLE' => '自定义CSS',
+	'PL_CSS_MODIFIER_DATE_UPDATE_ERROR' => '数据保存失败，请稍后重试。<a href="%s">点击返回</a>',
+	'PL_CSS_MODIFIER_TEST' => ''
+);
+
+$plugin_lang['zh_tw'] = array
+(
+
+	'PL_CSS_MODIFIER_MENU_TITLE' => '客制化CSS',
+	'PL_CSS_MODIFIER_DATE_UPDATE_ERROR' => '數據保存失敗，請稍後重試。 <a href="%s">點擊返回</a>',
+	'PL_CSS_MODIFIER_TEST' => ''
+);
+
+$plugin_lang['us_en'] = array
+(
+
+	'PL_CSS_MODIFIER_MENU_TITLE' => 'Custom CSS',
+	'PL_CSS_MODIFIER_DATE_UPDATE_ERROR' => 'Date update error, <a href="%s">go back</a>',
+	'PL_CSS_MODIFIER_TEST' => ''
+);
+
+plugin_append_lang( $plugin_lang );
+
 // 添加顶部导航按钮
 add_action( 'UI_USERMENU_BOTTOM' , 'mycss_menu_list');
 function mycss_menu_list()
 {
-	?><li><a href="?c=plugin&a=mycss">自定义CSS</a></li>
+	?><li><a href="?c=plugin&a=mycss"><?=__('PL_CSS_MODIFIER_MENU_TITLE')?></a></li>
 	<?php 	 	
 } 
 
@@ -38,7 +67,7 @@ add_action( 'PLUGIN_MYCSS' , 'plugin_mycss');
 function  plugin_mycss()
 {
 
-	$data['top'] = $data['top_title'] = '自定义样式表';
+	$data['top'] = $data['top_title'] = __('PL_CSS_MODIFIER_MENU_TITLE');
 	$data['css'] = get_var( "SELECT `css` FROM `css` WHERE `uid` = '" . intval(uid()) . "' LIMIT 1" );
 	render( $data , 'web' , 'plugin' , 'css_modifier' ); 
 }
@@ -51,7 +80,7 @@ function plugin_mycss_save()
 	$sql = "REPLACE INTO `css` ( `uid` , `css` ) VALUES ( '" . intval(uid()) . "' , '" . s( $css ) . "' )";
 	run_sql( $sql );
 	$location = '?c=plugin&a=mycss';
-	if( db_errno() != 0 ) return info_page('数据保存失败，请稍后重试。<a href="' . $location . '">点击返回</a>');
+	if( db_errno() != 0 ) return info_page( __( 'PL_CSS_MODIFIER_DATE_UPDATE_ERROR' , $location  ));
 	else header("Location:" . $location);
 }
 
