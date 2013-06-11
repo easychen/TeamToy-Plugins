@@ -1,0 +1,118 @@
+<style type="text/css">
+.calendar {
+   margin: 0;
+   padding: 0;
+   width: 910px;
+   border: 2px solid #333;
+   background-color: #ddd; }
+.calendar li {
+   list-style-position: inside;
+   font-weight: bold;
+   width: 118px;
+   min-height: 120px;
+   height: fixed;
+   border: 1px solid #999;
+   float: left; 
+   padding: 5px;
+   overflow: hidden; }
+.calendar li:hover {
+   overflow: visible; }
+.calendar li ul {
+   margin: 0;
+   padding: 0;
+   clear: both; }
+.calendar li ul p {
+   font-size: smaller;
+   list-style: none;
+   font-weight: normal;
+   float: none;
+   border: none;
+   padding: 0 0;
+   margin: 0; }
+   /*
+.calendar li:hover ul li, .calendar li.hover ul li {
+   position: absolute;
+   width: 150px;
+   margin-left: -38px;
+   height: auto;
+   background-color: #8cf; 
+   border: 1px solid #069;
+   padding: 10px;
+   z-index: 10; }
+   */
+.calendar li.monday {
+   margin-left: 0; }
+.calendar li.tuesday {
+   margin-left: 130px; }
+.calendar li.wednesday {
+   margin-left: 260px; }
+.calendar li.thursday {
+   margin-left: 390px; }
+.calendar li.friday {
+   margin-left: 520px; }
+.calendar li.saturday {
+   margin-left: 650px; }
+.calendar li.sunday {
+   margin-left: 780px; }
+.clear { 
+   clear: both; }
+.finished{
+   text-decoration:line-through;}
+.today{background-color: #FFFFCC;}
+.notoday{background-color: #fff; }
+</style>
+
+<script type="text/javascript">
+
+</script>
+<h2 class="main_board"><?=__('PL_CALENDAR_TITLE')?></h2>
+<div class="line"></div>
+<div id="calendar_list">
+<?php
+$today_day = date('j');
+$today_month = date('n');
+foreach($todo_lists as $month=>$group){
+	$year = date('Y');
+	$days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+	$first_weekday = strtolower(date('l',strtotime("$year-$month-1")));
+?>
+<p style="font-size: larger; font-weight: 600;"><?echo $month;?>月</p>
+<ol id="calendar_<?php echo $month;?>" class="calendar">
+<?php
+	for($i=1;$i<=$days;$i++){
+		$css_class = "";
+		if($i==1){
+			$css_class .= $first_weekday." ";
+		}
+		if($i==$today_day&&$month==$today_month){
+			$css_class .= "today";
+		}else{
+			$css_class .= "notoday";
+		}
+		echo "<li class='$css_class'>&nbsp;";
+		if($group[$i]){
+			echo "<ul>";
+			foreach($group[$i] as $todo){
+				$start = strlen("[$month.$i]");
+				if($todo['status']==3){
+					echo "<p class='finished'>";
+				}else{
+					echo "<p>";
+				}
+				echo "<a href='javascript:show_todo_detail_center({$todo['id']});void(0);'>
+				[{$todo['name']}]".substr($todo['content'],$start,15)."</a></p>";
+			}
+			echo "</ul>";
+		}
+		echo "</li>";
+	}
+?>
+   <div class="clear"></div>
+</ol>
+<hr>
+<?php
+}
+?>
+
+
+</div>
