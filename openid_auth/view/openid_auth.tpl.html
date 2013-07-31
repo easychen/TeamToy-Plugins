@@ -1,0 +1,13 @@
+<div class="row-fluid">
+    <form class="form-horizontal" action="?c=plugin&a=openid_auth_save" method="post" id="openid_auth_form">
+        <div class="control-group">
+            <label class="control-label" for="openid_auth_email_pattern"><?=__('PL_OPENID_AUTH_EMAIL_PATTEN')?></label>
+            <div class="controls">
+                <input type="text" class="input" id="openid_auth_email_pattern" name="openid_auth_email_pattern" value="<?=$openid_auth_email_pattern?>">
+            </div>
+        </div>
+
+            <a type="button" class="btn btn-primary" href="javascript:send_form_in('openid_auth_form');"><?=__('SAVE')?></a>
+    </form>
+
+</div>
