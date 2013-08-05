@@ -1,14 +1,16 @@
 <?php
 //liqiping@baixing.net
+//
+//注：由于SAE的限制，在新浪云上这个插件不能运行
 
 /***
 TeamToy extenstion info block
 ##name OpenIdAuth
 ##folder_name openid_auth
-##author Qiping
+##author QipingLi
 ##email liqiping@baixing.net
 ##reversion 1
-##desp 使用OpenId用于用户的登录
+##desp 使用OpenId用于用户的登录(由于SAE的限制，在新浪云上这个插件不能运行)
 ***/
 if( !defined('IN') ) die('bad request');
 
