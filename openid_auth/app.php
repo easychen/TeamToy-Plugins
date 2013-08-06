@@ -1,15 +1,17 @@
 <?php
 //liqiping@baixing.net
+//
+//注：由于SAE的限制，在新浪云上这个插件不能运行
 
 /***
 TeamToy extenstion info block
 ##name OpenIdAuth
 ##folder_name openid_auth
-##author Qiping
+##author QipingLi
 ##email liqiping@baixing.net
 ##reversion 1
-##desp 使用OpenId用于用户的登录
-***/
+##desp 使用OpenId用于用户的登录(由于SAE的限制，在新浪云上这个插件不能运行)
+ ***/
 if( !defined('IN') ) die('bad request');
 
 $plugin_lang = array();
@@ -72,7 +74,8 @@ add_action('CTRL_SESSION_STARTED', 'openid_auth_link');
 function openid_auth_link()
 {
 	//只在登录界面使用
-	if (g('c') == 'guest' && g('a') == 'index') {
+	if (!is_login() && g('c') == 'guest' && g('a') == 'index') {
+
 			?>
 			<script>
 				window.onload = function() {
@@ -102,15 +105,17 @@ function openid_auth_do() {
 		$genPassword = hash('md5', 'XFAGAGArere' . $email);
 
 		if (!(is_email_accepted($email))) die('该邮箱不能登录本系统！');
-		if(try_login($email, $genPassword)) {
+		$result = try_login($email, $genPassword);
+		if($result == 'succeed') {
 			//如果用户已经被注册过，直接登录
 			forward('?c=dashboard');
-		} else {
+		} elseif ($result == 'failed') {
 			//否则，先注册用户再登录
 			register($email, $userName, $genPassword);
 			try_login($email, $genPassword);
 			forward('?c=dashboard');
 		}
+		die('帐号已经被管理员关闭，请联系管理员');
 	}
 }
 
@@ -122,6 +127,7 @@ function is_email_accepted($email) {
 function try_login($email, $password) {
 	$user = get_full_info_by_email_password($email, $password);
 	if($user) {
+		if ($user['is_closed'] == '1') return 'closed';
 		session_set_cookie_params(c('session_time'));
 		@session_start();
 		$token = session_id();
@@ -134,10 +140,9 @@ function try_login($email, $password) {
 			$user['groups'] = explode('|', trim($user['groups'] , '|')) ;
 			$_SESSION['groups'] = $user['groups'];
 		}
-		return true;
-	} else {
-		return false;
+		return 'succeed';
 	}
+	return 'failed';
 }
 
 function register($email, $userName, $passwd) {
