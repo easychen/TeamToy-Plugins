@@ -1,0 +1,49 @@
+<div class="row-fluid">	
+<form class="form-horizontal" action="?c=plugin&a=sendcloud_update" method="post" id="sendcloud_form">
+	<div class="control-group">
+		<label class="control-label" for="sendcloud_user"><?=__('PL_SENDCLOUD_USER')?></label>
+		<div class="controls">
+			<input type="text" class="input" id="sendcloud_user" name="sendcloud_user" value="<?=$sendcloud_user?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="sendcloud_key"><?=__('PL_SENDCLOUD_KEY')?></label>
+		<div class="controls">
+			<input type="text" class="input" id="sendcloud_key" name="sendcloud_key" value="<?=$sendcloud_key?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="sendcloud_from"><?=__('PL_SENDCLOUD_FROM')?></label>
+		<div class="controls">
+			<input type="text" class="input" id="sendcloud_from" name="sendcloud_from" value="<?=$sendcloud_from?>">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="sendcloud_url"><?=__('PL_SENDCLOUD_URL')?></label>
+		<div class="controls">
+			<input type="text" class="input" id="sendcloud_url" name="sendcloud_url" value="<?php
+			if( strlen( $sendcloud_url ) > 1 ) echo $sendcloud_url;
+			else echo 'https://sendcloud.sohu.com/webapi/mail.send.json';
+			?>" >
+		</div>
+	</div>
+
+	<div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox" name="sendcloud_on" value="1" <?=intval($sendcloud_on)==1?' checked ':''?>> <?=__('PL_SENDCLOUD_ON')?>
+      </label>
+    </div>
+  </div>
+	
+	
+	
+	<div class="form-actions">
+            <a type="button" class="btn btn-primary" href="javascript:send_form_in('sendcloud_form');"><?=__('SAVE')?></a>
+
+</form>
+
+</div>	
